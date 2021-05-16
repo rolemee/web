@@ -1,0 +1,120 @@
+							隔空传话wp
+	下载附件后打开搜索前面几个数字，得到消息是PDU解密
+ 
+搜索GSM PDU解密https://www.diafaan.com/sms-tutorials/gsm-modem-tutorial/online-sms-pdu-decoder/
+
+把data里的数字复制进去一行一行解密，由于太慢了就写了脚本
+import requests
+from lxml import etree
+
+url = 'https://www.diafaan.com/php/DecodeSmsPdu.php'
+message = open('data.txt')
+for i in message.readlines():
+    mas = i.strip('\n')
+    playload = {'messagetype':'', 'pdu':mas}
+
+    response0 = requests.post(url=url,data=playload,headers={'Content-Type':'application/x-www-form-urlencoded'})
+    response = etree.HTML(response0.content.decode("utf-8"))
+    a = response.xpath('//*[@id="diafaan-pdu-result"]/tbody/tr[3]/td[2]/p/text()')
+    b = response.xpath('//*[@id="diafaan-pdu-result"]/tbody/tr[7]/td[2]/p/text()')
+    try:
+        print(a[0])
+
+    except:
+        a= str(a)
+        a0 = len(a)
+        print(a[2:a0-2])
+    # print(response.text)
+    # print(response)
+message.close()
+# message = open('data.txt')
+# for i in message.readlines():
+#     mas = i.strip('\n')
+#     playload = {'messagetype':'', 'pdu':mas}
+#
+#     response0 = requests.post(url=url,data=playload,headers={'Content-Type':'application/x-www-form-urlencoded'})
+#     response = etree.HTML(response0.content.decode("utf-8"))
+#     a = response.xpath('//*[@id="diafaan-pdu-result"]/tbody/tr[3]/td[2]/p/text()')
+#     b = response.xpath('//*[@id="diafaan-pdu-result"]/tbody/tr[7]/td[2]/p/text()')
+#     try:
+#         print(b[0])
+#     except:
+#         playload = {'messagetype': '', 'pdu': mas}
+#
+#         response0 = requests.post(url=url, data=playload, headers={'Content-Type': 'application/x-www-form-urlencoded'})
+#         response = etree.HTML(response0.content.decode("utf-8"))
+#         a = response.xpath('//*[@id="diafaan-pdu-result"]/tbody/tr[3]/td[2]/p/text()')
+#         b = response.xpath('//*[@id="diafaan-pdu-result"]/tbody/tr[7]/td[2]/p/text()')
+#         print(b[0])
+
+得到文件内容
+然后第二个脚本
+import requests
+from lxml import etree
+
+url = 'https://www.diafaan.com/php/DecodeSmsPdu.php'
+message = open('data.txt')
+
+message = open('data.txt')
+for i in message.readlines():
+    mas = i.strip('\n')
+    playload = {'messagetype':'', 'pdu':mas}
+
+    response0 = requests.post(url=url,data=playload,headers={'Content-Type':'application/x-www-form-urlencoded'})
+    response = etree.HTML(response0.content.decode("utf-8"))
+    a = response.xpath('//*[@id="diafaan-pdu-result"]/tbody/tr[3]/td[2]/p/text()')
+    b = response.xpath('//*[@id="diafaan-pdu-result"]/tbody/tr[7]/td[2]/p/text()')
+    try:
+        print(b[0])
+    except:
+        b = str(b)
+        b0 = len(b)
+        print(b[2:b0-2])
+
+
+得到日期
+
+得到以后拖进office排序 
+
+然后发现文件头是89504e是png格式，于是复制进010
+得到 
+这张图，根据一开始的 推测图片宽465,010修改以后
+得到
+ 
+
+在和前面的电话号码前八位合并一下就是flag
+ 
+
+
+
+
+
+					EASY—source wp
+
+打开以后发现就只有一串文字，尝试查看备份文件，/.index.php.swo
+猜测 flag 是藏在类的注释中，我们能够实例化任意类，并调用类方法，那么就可以利用 PHP 内置类中的 ReflectionMethod 来读取 User 类里面各个函数的注释
+
+造成题目中的 http 参数则是：?rc=ReflectionMethod&ra=User&rb=a&rd=getDocComment
+
+因为不知道是在哪个函数的注释中，所以逐个函数暴破，暴破 rb 的值 a-z
+
+得到flag
+
+ 
+[ACTF2020 新生赛]Exec 1
+
+直接ping ip可以得到结果，试一下：
+
+拿到flag。
+像这种什么都没过滤的题目，可以利用常见管道符直接执行命令：
+
+常见管道符
+1、|（就是按位或），直接执行|后面的语句
+
+2、||（就是逻辑或），如果前面命令是错的那么就执行后面的语句，否则只执行前面的语句
+
+3、&（就是按位与），&前面和后面命令都要执行，无论前面真假
+
+4、&&（就是逻辑与），如果前面为假，后面的命令也不执行，如果前面为真则执行两条命令
+
+
